@@ -51,21 +51,30 @@ function listaPorDiretorios($pathOrigem, $pathDestino){
             //Se for um diretorio chama a função novamente, passando o novo path
             if (empty($arquivoCaminhoCompleto['extension'])){
 
+                //Motando o novo pathOrigem
+                $dirOrigem = $pathOrigem->path ."\\". $arquivo;
+
                 //Pegar o novo diretorio
-                $pathOrigem = dir($arquivoCaminhoCompleto['dirname'] ."\\". $arquivo);
+                $pathOrigem = dir($dirOrigem);
 
                 //Verificar se e um diretorio válido
                 if (is_dir($pathOrigem->path)) {
 
-                    //Acrescenta o novo diretorio no diretorio de destino
-                    $pathDestino->path = $pathDestino->path . "\\" . $arquivo;
+                    //Motando o novo pathDestino
+                    $dirDestino = $pathDestino->path . "\\" . $arquivo;
 
-                    //Verificar se não existe o diretorio no path de destino, então ele cria
-                    if (!file_exists($pathDestino->path)){
+                    //Verificar se existe o diretorio no path de destino, então ele cria
+                    if (!is_dir($dirDestino)){
+
                         //Criar o diretorio
-                        $pathDestino->path = mkdir($pathDestino->path);
-                        echo "Criado novo path: " . $pathDestino->path;
+                        $novoCaminhoPathDestino = mkdir($dirDestino);
+
+                        //Acrescenta o novo diretorio no diretorio de destino
+                        $pathDestino = dir($novoCaminhoPathDestino);
+
                     }
+
+                    var_dump($pathDestino);
 
                     listaPorDiretorios($pathOrigem, $pathDestino);
 
@@ -73,9 +82,9 @@ function listaPorDiretorios($pathOrigem, $pathDestino){
 
             }
 
-            echo " - Arquivo movido foi: " . $arquivo . " - Novo path: " . $pathOrigem->path . "\n";
+//            echo " -|- Arquivo movido foi: " . $arquivo . " - Novo path: " . $pathOrigem->path . "\n";
             //Move o diretorio
-            //move_uploaded_file($arquivo, $pathOrigem);
+            //move_uploaded_file($arquivo, $pathOrigem->path);
 
         }
 
